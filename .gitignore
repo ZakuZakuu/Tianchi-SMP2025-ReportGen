@@ -1,0 +1,65 @@
+# ====================
+# 敏感文件 - 绝对不能提交
+# ====================
+.env
+*.key
+*.pem
+credentials.json
+config/secrets.json
+
+# ====================
+# 数据库和缓存
+# ====================
+chroma_db/
+external_data_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ====================
+# 日志和临时文件
+# ====================
+*.log
+*.tmp
+temp/
+logs/
+
+# ====================
+# 输出文件和竞赛答案 - 重要保护
+# ====================
+output/
+!output/README.md
+results/
+submissions/
+
+# ====================
+# 竞赛提交文件 - 答案保护
+# ====================
+data/*submission*.json
+data/backup/
+!data/preliminary.json
+!data/test_sample.json
+
+# ====================
+# 系统文件
+# ====================
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+.idea/
+
+# ====================
+# 备份文件
+# ====================
+*.backup
+*.bak
+*~
+
+# ====================
+# 大文件和数据集
+# ====================
+*.zip
+*.tar.gz
+*.rar
+data/preliminary_data.zip

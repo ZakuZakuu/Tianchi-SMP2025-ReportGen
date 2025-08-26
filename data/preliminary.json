@@ -1,0 +1,542 @@
+[
+    {
+        "id": "smp25_pre_001",
+        "question": "A Report on the Current State and Challenges of Explainable AI (XAI) Technology",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1091
+    },
+    {
+        "id": "smp25_pre_002",
+        "question": "Assessing the Applied Value of Digital Twin Technology in Smart City Management",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 933
+    },
+    {
+        "id": "smp25_pre_003",
+        "question": "Analysis of the Changing Global Semiconductor Supply Chain Landscape and Geopolitical Impacts in 2025",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 829
+    },
+    {
+        "id": "smp25_pre_004",
+        "question": "A Report on Efficiency Gains from AI in Automated Code Generation and Software Testing",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1073
+    },
+    {
+        "id": "smp25_pre_005",
+        "question": "Analysis of Robotic Process Automation (RPA) Application Cases in Traditional Manufacturing",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 877
+    },
+    {
+        "id": "smp25_pre_006",
+        "question": "An Evaluation Report on the Effectiveness of AI in the Field of Personalized Education",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1176
+    },
+    {
+        "id": "smp25_pre_007",
+        "question": "A Study on the Role of the 'Data Element x' Policy in Promoting the Data-Trading Market",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 991
+    },
+    {
+        "id": "smp25_pre_008",
+        "question": "Research on the Accelerating Role of AI in the Drug Discovery and Screening Process",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1099
+    },
+    {
+        "id": "smp25_pre_009",
+        "question": "Global Cybersecurity Threats in 2025: Detection and Defense Strategies for Deepfakes",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 925
+    },
+    {
+        "id": "smp25_pre_010",
+        "question": "A Study on the Role of AI in Mental Health Diagnosis and Preliminary Intervention",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 934
+    },
+    {
+        "id": "smp25_pre_011",
+        "question": "Assessing the Feasibility of Federated Learning for Model Training While Protecting Data Privacy",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1168
+    },
+    {
+        "id": "smp25_pre_012",
+        "question": "A Report on the Application and Contribution of AI in Climate Change Model Prediction",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1173
+    },
+    {
+        "id": "smp25_pre_013",
+        "question": "Analysis of the Adoption Rate of Smart Home Interoperability Standards (e.g., Matter) in 2025",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 975
+    },
+    {
+        "id": "smp25_pre_014",
+        "question": "An Exploration of the Commercialization Prospects of Space Exploration Technologies (e.g., Reusable Rockets)",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 1063
+    },
+    {
+        "id": "smp25_pre_015",
+        "question": "A Report on the Current Application of AI in Legal Services (Contract Review, Case Research)",
+        "type": "Cutting-Edge Tech & AI",
+        "word_limit": 874
+    },
+    {
+        "id": "smp25_pre_016",
+        "question": "An Analysis of the Sustainability of the Live E-commerce Model within the 'Influencer Economy'",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1151
+    },
+    {
+        "id": "smp25_pre_017",
+        "question": "Analysis of the Challenges Posed by the Promotion of the Digital Yuan (e-CNY) to the Existing Payment System",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1013
+    },
+    {
+        "id": "smp25_pre_018",
+        "question": "A Report on the Performance of Global Real Estate Investment Trusts (REITs) During an Interest Rate Hiking Cycle",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1007
+    },
+    {
+        "id": "smp25_pre_019",
+        "question": "Analysis of 'Nearshoring' and 'Friend-shoring' Trends in the Global Supply Chain in 2025",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1077
+    },
+    {
+        "id": "smp25_pre_020",
+        "question": "An Exploration of the Current State of Impact Investing and Its Social Return Assessment Systems",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 875
+    },
+    {
+        "id": "smp25_pre_021",
+        "question": "Assessing the Impact of the 'Buy Now, Pay Later' (BNPL) Model on the Credit Risk of Young Consumers",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 876
+    },
+    {
+        "id": "smp25_pre_022",
+        "question": "A Comparative Report on the R&D Progress of Major Central Bank Digital Currencies (CBDCs) Globally",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1188
+    },
+    {
+        "id": "smp25_pre_023",
+        "question": "An Analysis of the Growth Potential of the High-End Pet Food and Services Market in the 'Pet Economy'",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 818
+    },
+    {
+        "id": "smp25_pre_024",
+        "question": "Macro Strategies and Asset Allocation Trends of Global Hedge Funds in 2025",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1096
+    },
+    {
+        "id": "smp25_pre_025",
+        "question": "An Analysis of the Localization Strategies of the 'Membership Warehouse Club' Business Model in Asian Markets",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 986
+    },
+    {
+        "id": "smp25_pre_026",
+        "question": "Analysis of the Impact of Geopolitical Risks on Global Commodity Price Volatility",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 893
+    },
+    {
+        "id": "smp25_pre_027",
+        "question": "A Report on the Role and Responsibilities of the Chief AI Officer (CAIO) in Corporations",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 862
+    },
+    {
+        "id": "smp25_pre_028",
+        "question": "An Exploration of How Enterprises Can Build Customer Loyalty Using Private Traffic",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 918
+    },
+    {
+        "id": "smp25_pre_029",
+        "question": "Analysis of Global Green Bond Issuance and Investment Returns in 2025",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1081
+    },
+    {
+        "id": "smp25_pre_030",
+        "question": "An Analysis of the Promotional Effect of the 'Night-Time Economy' on Urban Commercial Vitality and Employment",
+        "type": "Business Models & Market Dynamics",
+        "word_limit": 1107
+    },
+    {
+        "id": "smp25_pre_031",
+        "question": "An Analysis of the Technological Development and Cost-Effectiveness of Sustainable Aviation Fuel (SAF)",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 934
+    },
+    {
+        "id": "smp25_pre_032",
+        "question": "An Analysis of the Role of Nature-based Solutions (NbS) in Urban Climate Adaptation",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 840
+    },
+    {
+        "id": "smp25_pre_033",
+        "question": "An Assessment of the Challenges to Grid Stability from Large-Scale Solar and Wind Power Generation",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 850
+    },
+    {
+        "id": "smp25_pre_034",
+        "question": "An Exploration of the Unification Process of Corporate-level ESG Data Disclosure Standards",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 1182
+    },
+    {
+        "id": "smp25_pre_035",
+        "question": "A Monitoring and Early Warning Study on the Impact of Ocean Acidification on Coral Reef Ecosystems",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 1161
+    },
+    {
+        "id": "smp25_pre_036",
+        "question": "An Effectiveness Evaluation of the 'Extended Producer Responsibility' System in E-waste Recycling",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 856
+    },
+    {
+        "id": "smp25_pre_037",
+        "question": "An Exploration of the Production, Storage, and Transportation Technologies and Economic Viability of Green Hydrogen",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 943
+    },
+    {
+        "id": "smp25_pre_038",
+        "question": "An Assessment of the Concepts and Practical Cases of 'Zero-Waste City' Construction",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 820
+    },
+    {
+        "id": "smp25_pre_039",
+        "question": "A Report on the Global Promotion Status of Sustainable Agricultural Practices (e.g., Regenerative Agriculture) in 2025",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 941
+    },
+    {
+        "id": "smp25_pre_040",
+        "question": "A Technical Maturity and Cost Analysis of Direct Air Carbon Capture (DAC) Technology",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 1067
+    },
+    {
+        "id": "smp25_pre_041",
+        "question": "An Analysis of the Success and Dilemmas of Global Endangered Species Protection Efforts in 2025",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 1101
+    },
+    {
+        "id": "smp25_pre_042",
+        "question": "An Assessment of the Role of 'Sponge City' Construction in Mitigating Urban Flooding",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 980
+    },
+    {
+        "id": "smp25_pre_043",
+        "question": "An Exploration of 'Just Transition' Social Issues During the Clean Energy Transition Process",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 992
+    },
+    {
+        "id": "smp25_pre_044",
+        "question": "A Report on Green Building Standards and Energy-Saving Technologies in the Construction Industry",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 929
+    },
+    {
+        "id": "smp25_pre_045",
+        "question": "A Research Report on the Impact of Light Pollution on Nocturnal Ecosystems",
+        "type": "Sustainability & Environmental Governance",
+        "word_limit": 996
+    },
+    {
+        "id": "smp25_pre_046",
+        "question": "A Study on the Impact of Global Remote Work on the Functional Transformation of Urban Central Districts",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1103
+    },
+    {
+        "id": "smp25_pre_047",
+        "question": "An Analysis of the Manifestations and Social Effects of 'Cancel Culture' on Social Media",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1169
+    },
+    {
+        "id": "smp25_pre_048",
+        "question": "An Analysis of the Rise of the 'Digital Nomad' Lifestyle and Its Impact on Individuals and Society",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1021
+    },
+    {
+        "id": "smp25_pre_049",
+        "question": "An Exploration of the 'Information Cocoon' and Social Polarization Phenomena on Social Media",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 967
+    },
+    {
+        "id": "smp25_pre_050",
+        "question": "A Study on the 'Gentrification' Problem in the Process of Urban Renewal",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 989
+    },
+    {
+        "id": "smp25_pre_051",
+        "question": "A Report on the Shifting Influence of Major World Languages on the Internet",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1136
+    },
+    {
+        "id": "smp25_pre_052",
+        "question": "An Analysis of the Cultural Identity and Social Acceptance of Global Esports in 2025",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 844
+    },
+    {
+        "id": "smp25_pre_053",
+        "question": "An Analysis of Generational Gaps and Value Conflicts on a Global Scale",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 997
+    },
+    {
+        "id": "smp25_pre_054",
+        "question": "An Exploration of the Causes and Interventions for Social Isolation and Loneliness in Modern Society",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 969
+    },
+    {
+        "id": "smp25_pre_055",
+        "question": "A Report on the Impact of Streaming Platforms on the Survival Model of Traditional Movie Theaters",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1194
+    },
+    {
+        "id": "smp25_pre_056",
+        "question": "A Report on the Current State of Protection and Inheritance of Traditional Handicrafts Worldwide",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1111
+    },
+    {
+        "id": "smp25_pre_057",
+        "question": "An Analysis of the Content Trends and Audience Behavior in the Global Podcast Industry in 2025",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 913
+    },
+    {
+        "id": "smp25_pre_058",
+        "question": "An Analysis of User Participation Motives and Knowledge Production Models in Online Knowledge Communities (e.g., Quora, Zhihu)",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 1090
+    },
+    {
+        "id": "smp25_pre_059",
+        "question": "An Exploration of Pathways for Cultivating Public Scientific Literacy in a 'Post-Truth' Era",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 867
+    },
+    {
+        "id": "smp25_pre_060",
+        "question": "A Study on the Cultural Drivers of Food Consumption Changes (e.g., Veganism, Locavorism)",
+        "type": "Social Change & Cultural Trends",
+        "word_limit": 955
+    },
+    {
+        "id": "smp25_pre_061",
+        "question": "An Exploration of the Applications and Ethical Issues of Precision Medicine in Personalized Treatment Plans",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 1158
+    },
+    {
+        "id": "smp25_pre_062",
+        "question": "An Analysis of the Adoption Rate and Service Models of Global Telemedicine in 2025",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 820
+    },
+    {
+        "id": "smp25_pre_063",
+        "question": "A Report on the Current State of and Response Strategies for Global Antibiotic Resistance",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 1064
+    },
+    {
+        "id": "smp25_pre_064",
+        "question": "A Report on the Global Acceptance and Regulation of Alternative Medicine (e.g., Acupuncture, Herbal Medicine) in 2025",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 1021
+    },
+    {
+        "id": "smp25_pre_065",
+        "question": "An Analysis of the Impact of Sleep Disorders on Modern Health and the Latest Treatment Methods",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 891
+    },
+    {
+        "id": "smp25_pre_066",
+        "question": "An Exploration of the Preparedness of Public Health Systems for the Next Global Pandemic",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 995
+    },
+    {
+        "id": "smp25_pre_067",
+        "question": "A Long-term Impact Analysis of Air Pollution on the Respiratory and Cardiovascular Systems",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 941
+    },
+    {
+        "id": "smp25_pre_068",
+        "question": "An Exploration of the Status and Development Strategies of 'Preventive Medicine' in Modern Healthcare Systems",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 862
+    },
+    {
+        "id": "smp25_pre_069",
+        "question": "The Latest Research on Early Diagnosis and Intervention Methods for Alzheimer's Disease",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 926
+    },
+    {
+        "id": "smp25_pre_070",
+        "question": "A Report on the Prevalence Trends and Public Health Interventions for the Global Obesity Problem",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 898
+    },
+    {
+        "id": "smp25_pre_071",
+        "question": "An Analysis of the Development of Innovative Drug Approval Processes and Regulatory Science in 2025",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 1191
+    },
+    {
+        "id": "smp25_pre_072",
+        "question": "An Analysis of the Detrimental Effects of Noise on Human Hearing and Mental Health",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 1117
+    },
+    {
+        "id": "smp25_pre_073",
+        "question": "An Exploration of the Current Development and Future Trends of Global Medical Tourism",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 979
+    },
+    {
+        "id": "smp25_pre_074",
+        "question": "A Comparative Report on the Effectiveness of Smoking Cessation Products and Services",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 1007
+    },
+    {
+        "id": "smp25_pre_075",
+        "question": "An Exploration of the Interoperability and Standardization Process of Electronic Medical Record (EMR) Systems",
+        "type": "Life Sciences & Public Health",
+        "word_limit": 845
+    },
+    {
+        "id": "smp25_pre_076",
+        "question": "A Report on the Evolving Role of the United Nations in 21st-Century Global Governance",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1135
+    },
+    {
+        "id": "smp25_pre_077",
+        "question": "An Analysis of the Impact of Trade Disputes Between Major Economies on Global Value Chains",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1155
+    },
+    {
+        "id": "smp25_pre_078",
+        "question": "An Exploration of International Cooperation and Challenges in Countering Cyber-Terrorism",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1038
+    },
+    {
+        "id": "smp25_pre_079",
+        "question": "A Geopolitical Impact Analysis of the Commercial Development of the Arctic Shipping Routes",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1003
+    },
+    {
+        "id": "smp25_pre_080",
+        "question": "An Assessment of the Operational Efficiency and Challenges of Major Global Humanitarian Aid Organizations",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 816
+    },
+    {
+        "id": "smp25_pre_081",
+        "question": "An Analysis of the Challenges of the 'Digital Sovereignty' Concept to Global Internet Governance",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 976
+    },
+    {
+        "id": "smp25_pre_082",
+        "question": "An Analysis of the Humanitarian and Political Dimensions of International Migration and Refugee Crises",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1037
+    },
+    {
+        "id": "smp25_pre_083",
+        "question": "An Exploration of Global Food Security and Supply Chain Resilience Issues",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1007
+    },
+    {
+        "id": "smp25_pre_084",
+        "question": "A Study on Post-International Space Station (ISS) Space Cooperation Models",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1028
+    },
+    {
+        "id": "smp25_pre_085",
+        "question": "An Evaluation of the Regulatory Effectiveness of the Global Financial Stability Board (FSB)",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 827
+    },
+    {
+        "id": "smp25_pre_086",
+        "question": "An Analysis of the Influence of Multinational Tech Companies in Global Politics",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1000
+    },
+    {
+        "id": "smp25_pre_087",
+        "question": "An Exploration of the Applicability and Limitations of International Law in Regulating Cyber Warfare",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1023
+    },
+    {
+        "id": "smp25_pre_088",
+        "question": "An Analysis of Potential Hotspots for Global Water Resource Conflicts",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 825
+    },
+    {
+        "id": "smp25_pre_089",
+        "question": "An Analysis of the Development Status and Future Direction of the 'Belt and Road' Initiative in 2025",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1166
+    },
+    {
+        "id": "smp25_pre_090",
+        "question": "An Exploration of the Ethical and International Law Issues of AI in Autonomous Weapon Systems",
+        "type": "Global Affairs & Future Governance",
+        "word_limit": 1028
+    }
+]
