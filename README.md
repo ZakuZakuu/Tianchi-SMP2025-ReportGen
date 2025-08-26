@@ -13,12 +13,6 @@
 - **📈 外部数据集成**: 支持ArXiv、RSS、NewsAPI等多种数据源
 - **⚡ 批量处理**: 高效的并行生成和后处理流程
 
-### 🏅 比赛成绩
-
-- **排名**: 前十名 (Top 10)
-- **字数准确率**: 94.8%平均准确率
-- **成功率**: 100%生成成功率
-
 ## 🚀 快速开始
 
 ### 1. 环境配置
@@ -63,104 +57,6 @@ python main.py --mode batch --input data/test_sample.json --output output/result
 python external_data_config.py --action both --category "Cutting-Edge Tech & AI"
 ```
 
-## 📁 项目结构
-
-```
-Tianchi-SMP2025-ReportGen/
-├── main.py                    # 主入口文件
-├── external_data_config.py    # 外部数据管理
-├── external_data_preprocessor.py # 数据预处理
-├── .env.example              # 环境变量模板
-├── requirements.txt          # 依赖列表
-├── src/                      # 核心模块
-│   ├── config.py            # 配置管理
-│   ├── multi_provider_model.py # 多提供商模型
-│   ├── rag_system.py        # RAG检索系统
-│   ├── report_generator.py  # 报告生成核心
-│   ├── prompt_templates.py  # 提示词模板
-│   └── external_data.py     # 外部数据接口
-├── data/                    # 数据文件
-│   ├── preliminary.json     # 比赛数据
-│   └── test_sample.json     # 测试数据
-└── output/                  # 输出目录
-```
-
-## 🎛️ 核心技术
-
-### 1.12反向折扣策略
-```python
-# 解决主模型系统性字数不足问题
-WORD_COUNT_GENERATION_BOOST=1.12
-```
-
-### 多层字数优化
-- **90%-110%**: 完全可接受范围
-- **60%-90%**: 智能扩写
-- **<60%**: 建议重新生成
-
-### 自动降级机制
-```
-主模型(qwen3-235b) → 辅助模型(qwen-flash) → 备用模型(qwen-plus)
-```
-
-## 📊 性能指标
-
-| 指标 | 值 |
-|------|------|
-| 平均字数准确率 | 94.8% |
-| 生成成功率 | 100% |
-| 平均处理时间 | 2-3分钟/题 |
-| 模型降级成功率 | 100% |
-
-## 🔧 高级配置
-
-### 外部数据源
-```bash
-# 查看缓存统计
-python external_data_config.py --action stats
-
-# 更新特定类别数据
-python external_data_config.py --action both --category "Business Models & Market Dynamics" --limit 10
-```
-
-### 字数控制微调
-```env
-# 可根据需要调整字数控制参数
-WORD_COUNT_GENERATION_BOOST=1.12  # 主生成提升系数
-WORD_COUNT_EXPANSION_DISCOUNT=0.92 # 扩写打折系数
-```
-
-## 🛠️ 开发指南
-
-### 添加新模型提供商
-1. 在 `src/multi_provider_model.py` 中添加新的提供商类
-2. 在 `.env` 中配置相应的API密钥
-3. 更新 `PROVIDER_PRIORITY` 设置
-
-### 自定义提示词
-编辑 `src/prompt_templates.py` 中的模板内容
-
-### 扩展外部数据源
-在 `external_data_config.py` 中添加新的数据源配置
-
-## 📈 监控和调试
-
-```bash
-# 查看详细日志
-python main.py --mode test --question_id "1" --input data/test_sample.json --verbose
-
-# 检查RAG系统状态
-python -c "from src.rag_system import RAGSystem; rag = RAGSystem(); print(rag.get_collection_stats())"
-```
-
-## 🤝 贡献指南
-
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
-
 ## 📄 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
@@ -170,14 +66,5 @@ python -c "from src.rag_system import RAGSystem; rag = RAGSystem(); print(rag.ge
 - 天池平台提供的比赛环境
 - 各大模型提供商的API支持
 - 开源社区的技术支持
-
-## 📞 联系我们
-
-如有问题或建议，请通过以下方式联系：
-
-- 创建 Issue
-- 发起 Discussion
-
----
 
 **⭐ 如果这个项目对你有帮助，请给我们一个星标！**
