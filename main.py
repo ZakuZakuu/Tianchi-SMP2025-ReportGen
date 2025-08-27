@@ -168,6 +168,20 @@ def show_stats():
     logger.info(f"备用模型配置: {config.BACKUP_MODEL}")
     logger.info(f"字数容忍度: {config.WORD_COUNT_TOLERANCE}")
     logger.info(f"服务商优先级: {config.PROVIDER_PRIORITY}")
+    
+    # 自适应字数增益统计
+    gain_stats = report_generator.adaptive_gain.get_statistics()
+    logger.info("自适应字数增益统计:")
+    logger.info(f"  启用状态: {gain_stats['enabled']}")
+    logger.info(f"  管理类别数: {gain_stats['total_categories']}")
+    logger.info(f"  参数配置: α={gain_stats['parameters']['alpha']}, 范围=[{gain_stats['parameters']['min_gain']:.2f}, {gain_stats['parameters']['max_gain']:.2f}]")
+    
+    if gain_stats['categories']:
+        logger.info("  各类别增益系数:")
+        for category, data in gain_stats['categories'].items():
+            logger.info(f"    {category}: {data['current_gain']:.4f} (样本数: {data['total_samples']}, 上次准确率: {data['last_accuracy']:.1f}%)")
+    else:
+        logger.info("  暂无类别数据")
 
 def main():
     """主函数"""

@@ -12,6 +12,7 @@ from .rag_system import rag_system
 from .multi_provider_model import model_manager
 from .prompt_templates import prompt_templates
 from .external_data import external_data_manager
+from .adaptive_word_gain import adaptive_word_gain_manager
 
 class ReportGenerator:
     """报告生成器 - 核心业务逻辑"""
@@ -21,6 +22,7 @@ class ReportGenerator:
         self.model_manager = model_manager
         self.prompts = prompt_templates
         self.external_data = external_data_manager
+        self.adaptive_gain = adaptive_word_gain_manager
     
     def count_words(self, text: str) -> int:
         """
@@ -37,6 +39,35 @@ class ReportGenerator:
             if clean_word:  # 如果移除标点后还有内容，则算作一个单词
                 valid_words.append(clean_word)
         return len(valid_words)
+    
+    def get_adaptive_word_gain(self, category: str, question_id: str = None) -> float:
+        """
+        获取自适应字数增益系数
+        
+        Args:
+            category: 题目类别
+            question_id: 题目ID (可选，用于日志)
+            
+        Returns:
+            增益系数
+        """
+        return self.adaptive_gain.get_gain_coefficient(category, question_id)
+    
+    def update_adaptive_word_gain(self, category: str, target_words: int, actual_words: int, 
+                                 question_id: str = None) -> float:
+        """
+        更新自适应字数增益系数
+        
+        Args:
+            category: 题目类别
+            target_words: 目标字数
+            actual_words: 实际生成字数
+            question_id: 题目ID (可选)
+            
+        Returns:
+            更新后的增益系数
+        """
+        return self.adaptive_gain.update_gain_coefficient(category, target_words, actual_words, question_id)
     
     def clean_report_artifacts(self, text: str) -> str:
         """
@@ -143,7 +174,7 @@ class ReportGenerator:
         else:
             return "single_shot"
     
-    def generate_single_shot(self, question: str, category: str, word_limit: int) -> str:
+    def generate_single_shot(self, question: str, category: str, word_limit: int, question_id: str = None) -> str:
         """单次生成策略"""
         logger.info(f"使用单次生成策略: {question[:50]}...")
         
@@ -167,9 +198,10 @@ class ReportGenerator:
         # 4. 选择模型
         model_key = self.model_manager.select_model(category, word_limit)
         
-        # 5. 生成报告（应用反向折扣策略）
-        boosted_word_limit = int(word_limit * config.WORD_COUNT_GENERATION_BOOST)
-        logger.info(f"原始字数目标: {word_limit}, 折扣后生成目标: {boosted_word_limit}")
+        # 5. 生成报告（应用自适应字数增益策略）
+        adaptive_gain = self.get_adaptive_word_gain(category)
+        boosted_word_limit = int(word_limit * adaptive_gain)
+        logger.info(f"原始字数目标: {word_limit}, 自适应增益: {adaptive_gain:.4f}, 调整后生成目标: {boosted_word_limit}")
         
         generation_prompt = self.prompts.get_generation_prompt(
             question, full_context[:config.MAX_CONTEXT_LENGTH], 
@@ -178,12 +210,16 @@ class ReportGenerator:
         
         report = self.model_manager.generate_with_retry(generation_prompt, model_key)
         
-        # 6. 字数优化
+        # 6. 基于原始生成结果更新自适应增益系数
+        original_word_count = self.count_words(report)
+        self.update_adaptive_word_gain(category, word_limit, original_word_count, question_id)
+        
+        # 7. 字数优化
         optimized_report = self.optimize_word_count_simple(report, word_limit)
         
         return optimized_report
     
-    def generate_multi_step(self, question: str, category: str, word_limit: int) -> str:
+    def generate_multi_step(self, question: str, category: str, word_limit: int, question_id: str = None) -> str:
         """多步骤生成策略"""
         logger.info(f"使用多步骤生成策略: {question[:50]}...")
         
@@ -217,9 +253,10 @@ class ReportGenerator:
         )
         outline = self.model_manager.generate_with_retry(outline_prompt, model_key)
         
-        # Step 4: 报告生成（应用反向折扣策略）
-        boosted_word_limit = int(word_limit * config.WORD_COUNT_GENERATION_BOOST)
-        logger.info(f"多步策略 - 原始字数目标: {word_limit}, 折扣后生成目标: {boosted_word_limit}")
+        # Step 4: 报告生成（应用自适应字数增益策略）
+        adaptive_gain = self.get_adaptive_word_gain(category)
+        boosted_word_limit = int(word_limit * adaptive_gain)
+        logger.info(f"多步策略 - 原始字数目标: {word_limit}, 自适应增益: {adaptive_gain:.4f}, 调整后生成目标: {boosted_word_limit}")
         
         generation_prompt = self.prompts.get_generation_prompt(
             question, full_context[:config.MAX_CONTEXT_LENGTH], 
@@ -227,12 +264,16 @@ class ReportGenerator:
         )
         report = self.model_manager.generate_with_retry(generation_prompt, model_key)
         
-        # Step 5: 字数优化
+        # Step 5: 基于原始生成结果更新自适应增益系数
+        original_word_count = self.count_words(report)
+        self.update_adaptive_word_gain(category, word_limit, original_word_count, question_id)
+        
+        # Step 6: 字数优化
         optimized_report = self.optimize_word_count_simple(report, word_limit)
         
         return optimized_report
     
-    def generate_dual_validation(self, question: str, category: str, word_limit: int) -> str:
+    def generate_dual_validation(self, question: str, category: str, word_limit: int, question_id: str = None) -> str:
         """双模型验证生成策略"""
         logger.info(f"使用双模型验证策略: {question[:50]}...")
         
@@ -251,9 +292,10 @@ class ReportGenerator:
 {external_text}
 """
         
-        # 双模型生成（应用反向折扣策略）
-        boosted_word_limit = int(word_limit * config.WORD_COUNT_GENERATION_BOOST)
-        logger.info(f"双模型策略 - 原始字数目标: {word_limit}, 折扣后生成目标: {boosted_word_limit}")
+        # 双模型生成（应用自适应字数增益策略）
+        adaptive_gain = self.get_adaptive_word_gain(category)
+        boosted_word_limit = int(word_limit * adaptive_gain)
+        logger.info(f"双模型策略 - 原始字数目标: {word_limit}, 自适应增益: {adaptive_gain:.4f}, 调整后生成目标: {boosted_word_limit}")
         
         generation_prompt = self.prompts.get_generation_prompt(
             question, full_context[:config.MAX_CONTEXT_LENGTH], 
@@ -261,6 +303,10 @@ class ReportGenerator:
         )
         
         report = self.model_manager.dual_model_validation(generation_prompt, category)
+        
+        # 基于原始生成结果更新自适应增益系数
+        original_word_count = self.count_words(report)
+        self.update_adaptive_word_gain(category, word_limit, original_word_count, question_id)
         
         # 字数优化 - 使用简化策略
         optimized_report = self.optimize_word_count_simple(report, word_limit)
@@ -389,7 +435,7 @@ Output the complete expanded report without any additional explanations or meta-
             logger.info("扩写失败，返回原文")
             return content
     
-    def generate_report(self, question: str, category: str, word_limit: int) -> str:
+    def generate_report(self, question: str, category: str, word_limit: int, question_id: str = None) -> str:
         """主生成接口"""
         try:
             logger.info(f"开始生成报告: {question[:50]}... (类别: {category}, 字数: {word_limit})")
@@ -400,11 +446,11 @@ Output the complete expanded report without any additional explanations or meta-
             
             # 根据策略生成报告
             if strategy == "single_shot":
-                report = self.generate_single_shot(question, category, word_limit)
+                report = self.generate_single_shot(question, category, word_limit, question_id)
             elif strategy == "multi_step":
-                report = self.generate_multi_step(question, category, word_limit)
+                report = self.generate_multi_step(question, category, word_limit, question_id)
             else:  # dual_validation
-                report = self.generate_dual_validation(question, category, word_limit)
+                report = self.generate_dual_validation(question, category, word_limit, question_id)
             
             # 清理格式标记和不需要的文本
             report = self.clean_report_artifacts(report)
@@ -467,7 +513,7 @@ Output the complete expanded report without any additional explanations or meta-
                 word_limit = item['word_limit']
                 
                 # 生成报告
-                answer = self.generate_report(question, category, word_limit)
+                answer = self.generate_report(question, category, word_limit, question_id)
                 word_count = self.count_words(answer)
                 accuracy = (word_count / word_limit) * 100
                 

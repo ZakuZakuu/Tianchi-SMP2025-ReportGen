@@ -91,6 +91,16 @@ class Config:
     WORD_COUNT_TRUNCATION_THRESHOLD: float = float(os.getenv("WORD_COUNT_TRUNCATION_THRESHOLD", "1.25"))
     WORD_COUNT_GENERATION_BOOST: float = float(os.getenv("WORD_COUNT_GENERATION_BOOST", "1.08"))
     
+    # 自适应字数增益配置
+    ADAPTIVE_GAIN_ENABLED: bool = os.getenv("ADAPTIVE_GAIN_ENABLED", "true").lower() == "true"
+    ADAPTIVE_GAIN_ALPHA: float = float(os.getenv("ADAPTIVE_GAIN_ALPHA", "0.3"))  # 学习率
+    ADAPTIVE_GAIN_MIN: float = float(os.getenv("ADAPTIVE_GAIN_MIN", "1.0"))  # 最小增益系数
+    ADAPTIVE_GAIN_MAX: float = float(os.getenv("ADAPTIVE_GAIN_MAX", "1.35"))  # 最大增益系数
+    ADAPTIVE_GAIN_DEFAULT: float = float(os.getenv("ADAPTIVE_GAIN_DEFAULT", "1.12"))  # 默认增益系数
+    ADAPTIVE_GAIN_SATISFACTION_MIN: float = float(os.getenv("ADAPTIVE_GAIN_SATISFACTION_MIN", "0.95"))  # 满意区间下限
+    ADAPTIVE_GAIN_SATISFACTION_MAX: float = float(os.getenv("ADAPTIVE_GAIN_SATISFACTION_MAX", "1.05"))  # 满意区间上限
+    ADAPTIVE_GAIN_MAX_ADJUSTMENT: float = float(os.getenv("ADAPTIVE_GAIN_MAX_ADJUSTMENT", "0.1"))  # 单次最大调整比例
+    
     # 主题类别映射
     CATEGORIES = {
         "Cutting-Edge Tech & AI": "tech_ai",
