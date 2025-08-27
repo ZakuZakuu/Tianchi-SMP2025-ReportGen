@@ -1,6 +1,9 @@
 """
-外部数据预处理模块
-处理HTML清理和智能总结
+- 外部数据预处理模块
+- HTML清理: 去除网页标签和格式
+- 智能总结: 使用大模型压缩长文本
+- 批量处理: 高效处理大量数据
+- 缓存机制: 避免重复获取
 """
 
 import re
@@ -21,10 +24,11 @@ class ExternalDataPreprocessor:
     """外部数据预处理器"""
     
     def __init__(self):
-        # 从环境变量读取配置
+        # 从环境变量和统一配置读取配置
         self.summary_model = os.getenv('SUMMARY_MODEL', 'siliconflow:Qwen/Qwen2.5-7B-Instruct')
-        self.summary_max_length = int(os.getenv('SUMMARY_MAX_LENGTH', '300'))
-        self.summary_min_length = int(os.getenv('SUMMARY_MIN_LENGTH', '500'))
+        # 使用统一配置的文档长度限制，确保与向量化过程一致
+        self.summary_max_length = min(int(os.getenv('SUMMARY_MAX_LENGTH', '1000')), config.MAX_DOCUMENT_LENGTH)
+        self.summary_min_length = int(os.getenv('SUMMARY_MIN_LENGTH', '1500'))
         self.html_cleanup_enabled = os.getenv('HTML_CLEANUP_ENABLED', 'true').lower() == 'true'
         self.summary_enabled = bool(self.summary_model and self.summary_model.strip())
         
@@ -42,17 +46,18 @@ class ExternalDataPreprocessor:
         
         # 总结提示词模板
         self.summary_prompt_template = """
-请将以下文本内容进行总结，要求：
-1. 保留核心信息和主要观点
-2. 去除营销语言和冗余内容
-3. 控制在{max_length}字以内
-4. 保持客观、准确的语调
-5. 如果包含具体数据或时间，请保留
+Please summarize the following text content. Requirements:
+1. Preserve core information and main points
+2. Remove marketing language and redundant content
+3. Keep within {max_length} characters
+4. Maintain objective and accurate tone
+5. Preserve specific data, numbers, and dates if present
+6. Output in English only
 
-原文内容：
+Original content:
 {content}
 
-总结：
+Summary:
 """
     
     def _get_summary_client(self):

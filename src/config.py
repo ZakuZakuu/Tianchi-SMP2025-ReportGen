@@ -77,6 +77,10 @@ class Config:
     EMBEDDING_PROVIDER: str = os.getenv("EMBEDDING_PROVIDER", "local")  # local, siliconflow, openai
     MAX_CONTEXT_LENGTH: int = int(os.getenv("MAX_CONTEXT_LENGTH", "8000"))
     
+    # 文档长度配置（用于向量化和外部数据处理）
+    MAX_DOCUMENT_LENGTH: int = int(os.getenv("MAX_DOCUMENT_LENGTH", "1000"))  # 向量化时最大文档长度
+    MIN_DOCUMENT_LENGTH: int = int(os.getenv("MIN_DOCUMENT_LENGTH", "50"))    # 最小有效文档长度
+    
     # 生成配置
     DEFAULT_TEMPERATURE: float = float(os.getenv("DEFAULT_TEMPERATURE", "0.3"))
     MAX_RETRIES: int = int(os.getenv("MAX_RETRIES", "3"))
@@ -100,6 +104,13 @@ class Config:
     ADAPTIVE_GAIN_SATISFACTION_MIN: float = float(os.getenv("ADAPTIVE_GAIN_SATISFACTION_MIN", "0.95"))  # 满意区间下限
     ADAPTIVE_GAIN_SATISFACTION_MAX: float = float(os.getenv("ADAPTIVE_GAIN_SATISFACTION_MAX", "1.05"))  # 满意区间上限
     ADAPTIVE_GAIN_MAX_ADJUSTMENT: float = float(os.getenv("ADAPTIVE_GAIN_MAX_ADJUSTMENT", "0.1"))  # 单次最大调整比例
+    
+    # 外部数据源配置
+    NEWS_API_KEY: str = os.getenv("NEWS_API_KEY", "")
+    SUMMARY_MODEL: str = os.getenv("SUMMARY_MODEL", "siliconflow:Qwen/Qwen2.5-7B-Instruct")
+    SUMMARY_MAX_LENGTH: int = int(os.getenv("SUMMARY_MAX_LENGTH", "1000"))
+    SUMMARY_MIN_LENGTH: int = int(os.getenv("SUMMARY_MIN_LENGTH", "1500"))
+    HTML_CLEANUP_ENABLED: bool = os.getenv("HTML_CLEANUP_ENABLED", "true").lower() == "true"
     
     # 主题类别映射
     CATEGORIES = {

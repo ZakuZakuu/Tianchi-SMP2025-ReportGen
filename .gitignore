@@ -12,6 +12,7 @@ config/secrets.json
 # ====================
 chroma_db/
 external_data_cache/
+external_data_cache_processed/
 __pycache__/
 *.pyc
 *.pyo

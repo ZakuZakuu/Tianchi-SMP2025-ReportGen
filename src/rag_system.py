@@ -66,6 +66,44 @@ class RAGSystem:
         self.collections = {}
         self._init_collections()
     
+    def _smart_truncate(self, text: str, max_length: int) -> str:
+        """智能截断：保留开头和重要信息"""
+        if len(text) <= max_length:
+            return text
+        
+        # 策略1: 如果有明显的段落分割，优先保留完整段落
+        paragraphs = text.split('\n\n')
+        if len(paragraphs) > 1:
+            result = ""
+            for para in paragraphs:
+                if len(result) + len(para) + 2 <= max_length:  # +2 for \n\n
+                    result += para + "\n\n"
+                else:
+                    break
+            if result.strip():
+                return result.strip()
+        
+        # 策略2: 如果有句号分割，优先保留完整句子
+        sentences = text.split('。')
+        if len(sentences) > 1:
+            result = ""
+            for sentence in sentences[:-1]:  # 排除最后一个可能不完整的句子
+                if len(result) + len(sentence) + 1 <= max_length:  # +1 for 。
+                    result += sentence + "。"
+                else:
+                    break
+            if result.strip():
+                return result.strip()
+        
+        # 策略3: 保留开头和结尾的关键信息
+        if max_length >= 200:
+            head_size = int(max_length * 0.7)  # 70%给开头
+            tail_size = max_length - head_size - 10  # 10字符给省略号
+            return text[:head_size] + "...[省略]..." + text[-tail_size:]
+        
+        # 策略4: 直接截断（兜底）
+        return text[:max_length]
+
     def _init_collections(self):
         """初始化各类别的collection"""
         for category_name, category_key in config.CATEGORIES.items():
@@ -93,19 +131,21 @@ class RAGSystem:
             if metadatas is None:
                 metadatas = [{"source": "knowledge_base", "category": category}] * len(documents)
             
-            # 过滤过长文档（限制在400字符以内，约512 tokens）
+            # 过滤过长文档（使用配置的最大文档长度）
+            # 与external_data_config.py的分块大小保持一致
+            max_doc_length = config.MAX_DOCUMENT_LENGTH
             filtered_docs = []
             filtered_metas = []
             for i, doc in enumerate(documents):
-                if len(doc) <= 400:
+                if len(doc) <= max_doc_length:
                     filtered_docs.append(doc)
                     filtered_metas.append(metadatas[i] if i < len(metadatas) else metadatas[0])
                 else:
-                    # 截断过长文档
-                    truncated = doc[:400]
+                    # 智能截断：优先保留开头和结尾的重要信息
+                    truncated = self._smart_truncate(doc, max_doc_length)
                     filtered_docs.append(truncated)
                     filtered_metas.append(metadatas[i] if i < len(metadatas) else metadatas[0])
-                    logger.warning(f"文档过长已截断: {len(doc)} -> 400字符")
+                    logger.warning(f"文档过长已智能截断: {len(doc)} -> {len(truncated)}字符")
             
             # 分批处理，每批最多16个文档（留出安全边界）
             batch_size = 16

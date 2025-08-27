@@ -177,17 +177,17 @@ class ArxivDataSource:
             return []
 
 class NewsAPISource:
-    """新闻API数据源（示例 - 需要API密钥）"""
+    """Event Registry API数据源"""
     
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key
-        self.base_url = "https://newsapi.org/v2/everything"
+        self.base_url = "http://eventregistry.org/api/v1/article/getArticles"
         self.cache_manager = DataCacheManager()
     
     def fetch(self, category: str, keywords: List[str], limit: int = 20) -> List[Dict[str, Any]]:
         """获取新闻数据"""
         if not self.api_key:
-            logger.warning("NewsAPI密钥未配置，跳过新闻数据获取")
+            logger.warning("Event Registry API密钥未配置，跳过新闻数据获取")
             return []
         
         query_key = "_".join(keywords)
@@ -198,34 +198,51 @@ class NewsAPISource:
             return cached_data
         
         try:
-            query = " OR ".join(keywords)
-            params = {
-                'q': query,
-                'language': 'en',
-                'sortBy': 'publishedAt',
-                'pageSize': limit,
-                'apiKey': self.api_key
+            # 构建Event Registry API请求体
+            request_body = {
+                "action": "getArticles",
+                "keyword": keywords,
+                "keywordOper": "or",  # 使用OR操作符
+                "lang": ["eng"],  # 只要英文文章
+                "articlesPage": 1,
+                "articlesCount": min(limit, 100),  # Event Registry最多100篇
+                "articlesSortBy": "date",
+                "articlesSortByAsc": False,
+                "articleBodyLen": -1,  # 获取完整文章内容
+                "dataType": ["news"],
+                "forceMaxDataTimeWindow": 31,  # 限制最近31天
+                "resultType": "articles",
+                "apiKey": self.api_key
             }
             
-            response = requests.get(self.base_url, params=params, timeout=30)
+            response = requests.post(self.base_url, json=request_body, timeout=30, headers={
+                'User-Agent': 'Tianchi-SMP2025-ReportGen/1.0',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            })
             response.raise_for_status()
             
             data = response.json()
             entries = []
             
-            for article in data.get('articles', []):
-                if article.get('title') and article.get('description'):
+            # Event Registry API 返回格式
+            articles = data.get('articles', {}).get('results', [])
+            
+            for article in articles:
+                if article.get('title') and article.get('body'):
                     entries.append({
                         "title": article['title'],
-                        "content": article['description'] + (article.get('content', '') or ''),
-                        "source": article.get('source', {}).get('name', 'News'),
-                        "date": article.get('publishedAt', '')[:10],
-                        "type": "news_article"
+                        "content": article['body'],
+                        "source": article.get('source', {}).get('title', 'Event Registry'),
+                        "date": article.get('date', ''),
+                        "type": "news_article",
+                        "url": article.get('url', ''),
+                        "lang": article.get('lang', 'eng')
                     })
             
             # 缓存结果
             self.cache_manager.save_cache("news", query_key, category, entries)
-            logger.info(f"获取到 {len(entries)} 条新闻")
+            logger.info(f"从Event Registry获取到 {len(entries)} 条新闻")
             
             return entries
             
@@ -401,29 +418,29 @@ class ExternalDataManager:
         except Exception as e:
             logger.error(f"NewsAPI数据获取失败: {e}")
         
-        # 预处理数据（HTML清理和智能总结）
-        if all_data:
-            try:
-                logger.info(f"开始预处理 {len(all_data)} 条数据...")
-                all_data = self.preprocessor.preprocess_batch(all_data)
-                
-                # 显示处理统计
-                stats = self.preprocessor.get_processing_stats(all_data)
-                logger.info(f"预处理完成: {stats}")
-                
-            except Exception as e:
-                logger.error(f"数据预处理失败: {e}")
-        
-        logger.info(f"类别 {category} 共获取 {len(all_data)} 条数据")
+        logger.info(f"类别 {category} 共获取 {len(all_data)} 条原始数据（已保存到缓存）")
         return all_data
     
     def vectorize_cached_data(self):
-        """将缓存的数据向量化并添加到RAG系统"""
+        """将缓存的数据向量化并添加到RAG系统
+        
+        优先使用预处理后的缓存数据，如果不存在则使用原始缓存数据
+        """
         logger.info("开始向量化缓存数据...")
         
-        cache_dir = Path("external_data_cache")
-        if not cache_dir.exists():
-            logger.warning("缓存目录不存在，请先运行数据缓存")
+        # 优先使用预处理后的缓存
+        processed_cache_dir = Path("external_data_cache_processed")
+        raw_cache_dir = Path("external_data_cache")
+        
+        # 确定使用哪个缓存目录
+        if processed_cache_dir.exists() and any(processed_cache_dir.iterdir()):
+            cache_dir = processed_cache_dir
+            logger.info("使用预处理后的缓存数据进行向量化")
+        elif raw_cache_dir.exists():
+            cache_dir = raw_cache_dir
+            logger.info("使用原始缓存数据进行向量化（建议先运行预处理）")
+        else:
+            logger.warning("未找到任何缓存数据")
             return
         
         for category_dir in cache_dir.iterdir():
@@ -455,11 +472,14 @@ class ExternalDataManager:
                             cache_data = json.load(f)
                         
                         for item in cache_data.get('data', []):
+                            # 智能选择内容：优先使用预处理后的数据
+                            content = self._get_best_content_for_vectorization(item)
+                            
                             # 格式化为文档块
                             doc_text = f"""标题: {item.get('title', '')}
 来源: {item.get('source', '')} ({item.get('date', '')})
 类型: {item.get('type', '')}
-内容: {item.get('content', '')}"""
+内容: {content}"""
                             documents.append(doc_text)
                     
                     except Exception as e:
@@ -473,6 +493,130 @@ class ExternalDataManager:
                     logger.info(f"已向量化 {len(chunked_docs)} 个文档块到类别 {category}")
         
         logger.info("数据向量化完成")
+    
+    def _get_best_content_for_vectorization(self, item: Dict[str, Any]) -> str:
+        """智能选择最适合向量化的内容
+        
+        优先级：
+        1. 预处理后的内容（已总结的高质量内容）
+        2. 清理后的内容（去除HTML但未总结）
+        3. 原始内容（兜底方案）
+        """
+        # 优先级1: 预处理后的内容（已总结）
+        if item.get('processed', False) and 'content' in item:
+            processed_content = item['content']
+            # 验证预处理后的内容质量
+            if processed_content and len(processed_content.strip()) > 50:
+                logger.debug(f"使用预处理内容，长度: {len(processed_content)}")
+                return processed_content
+        
+        # 优先级2: 清理后但未总结的内容
+        if 'cleaned_content' in item:
+            cleaned_content = item['cleaned_content']
+            if cleaned_content and len(cleaned_content.strip()) > 50:
+                logger.debug(f"使用清理后内容，长度: {len(cleaned_content)}")
+                return cleaned_content
+        
+        # 优先级3: 原始内容（兜底）
+        original_content = item.get('content', '')
+        if original_content:
+            logger.debug(f"使用原始内容，长度: {len(original_content)}")
+            return original_content
+        
+        logger.warning("所有内容选项都为空")
+        return ""
+    
+    def reprocess_cached_data(self):
+        """重新预处理现有的缓存数据
+        
+        这个方法会：
+        1. 扫描所有原始缓存文件
+        2. 进行预处理
+        3. 保存到独立的预处理文件夹
+        4. 保持原始数据不变
+        """
+        logger.info("开始重新预处理现有缓存数据...")
+        
+        raw_cache_dir = Path("external_data_cache")
+        processed_cache_dir = Path("external_data_cache_processed")
+        
+        if not raw_cache_dir.exists():
+            logger.warning("原始缓存目录不存在")
+            return
+        
+        # 创建预处理缓存目录
+        processed_cache_dir.mkdir(exist_ok=True)
+        logger.info(f"预处理数据将保存到: {processed_cache_dir}")
+        
+        total_files = 0
+        total_items = 0
+        processed_items = 0
+        
+        for category_dir in raw_cache_dir.iterdir():
+            if category_dir.is_dir():
+                category_name = category_dir.name.replace('_', ' ').replace('-', ' ').title()
+                logger.info(f"处理类别: {category_name}")
+                
+                # 创建对应的预处理类别目录
+                processed_category_dir = processed_cache_dir / category_dir.name
+                processed_category_dir.mkdir(exist_ok=True)
+                
+                for cache_file in category_dir.glob("*.json"):
+                    total_files += 1
+                    logger.info(f"  处理文件: {cache_file.name}")
+                    
+                    # 定义预处理后的文件路径
+                    processed_file = processed_category_dir / cache_file.name
+                    
+                    # 检查预处理文件是否已存在且较新
+                    if processed_file.exists():
+                        raw_mtime = cache_file.stat().st_mtime
+                        processed_mtime = processed_file.stat().st_mtime
+                        if processed_mtime >= raw_mtime:
+                            logger.info(f"    预处理文件已存在且是最新的，跳过")
+                            continue
+                    
+                    try:
+                        # 读取原始缓存文件
+                        with open(cache_file, 'r', encoding='utf-8') as f:
+                            raw_cache_data = json.load(f)
+                        
+                        original_data = raw_cache_data.get('data', [])
+                        total_items += len(original_data)
+                        
+                        logger.info(f"    原始数据: {len(original_data)}条")
+                        
+                        # 预处理所有数据
+                        if original_data:
+                            logger.info(f"    开始预处理 {len(original_data)} 条数据...")
+                            processed_data = self.preprocessor.preprocess_batch(original_data)
+                            processed_items += len(processed_data)
+                            
+                            # 创建预处理后的缓存数据结构
+                            processed_cache_data = raw_cache_data.copy()
+                            processed_cache_data['data'] = processed_data
+                            processed_cache_data['processing_info'] = {
+                                'processed_at': time.time(),
+                                'processed_count': len(processed_data),
+                                'original_file': str(cache_file),
+                                'preprocessor_config': self.preprocessor.get_stats()
+                            }
+                            
+                            # 保存预处理后的缓存文件
+                            with open(processed_file, 'w', encoding='utf-8') as f:
+                                json.dump(processed_cache_data, f, ensure_ascii=False, indent=2)
+                            
+                            logger.info(f"    预处理完成，已保存到: {processed_file}")
+                        else:
+                            logger.info(f"    无数据需要处理")
+                    
+                    except Exception as e:
+                        logger.error(f"处理缓存文件失败 {cache_file}: {e}")
+        
+        logger.info(f"缓存数据重新预处理完成！")
+        logger.info(f"  处理文件: {total_files}个")
+        logger.info(f"  总数据项: {total_items}条")
+        logger.info(f"  新处理项: {processed_items}条")
     
     def _chunk_documents(self, documents: List[str], max_chunk_size: int = 1000) -> List[str]:
         """将文档分块"""
@@ -504,7 +648,16 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="外部数据源管理")
-    parser.add_argument("--action", choices=["cache", "vectorize", "both", "stats"], required=True)
+    parser.add_argument("--action", choices=["cache", "process", "vectorize", "all", "stats", "reprocess"], 
+                       required=True, help="""
+操作类型:
+  cache: 获取原始数据并保存到external_data_cache（不进行预处理）
+  process: 处理external_data_cache中的原始数据，保存到external_data_cache_processed
+  vectorize: 将处理后的数据向量化并添加到RAG系统
+  all: 完整流程：缓存数据 -> 预处理数据 -> 向量化
+  stats: 显示缓存统计信息
+  reprocess: 重新处理所有缓存数据
+""")
     parser.add_argument("--category", help="指定类别")
     parser.add_argument("--limit", type=int, default=15, help="每个数据源的限制数量")
     
@@ -521,13 +674,31 @@ def main():
     elif args.action == "vectorize":
         manager.vectorize_cached_data()
     
-    elif args.action == "both":
+    elif args.action == "all":
+        # 完整流程：cache -> process -> vectorize
+        print("=== 步骤 1/3: 缓存原始数据 ===")
         if args.category:
             manager.cache_category_data(args.category, args.limit)
         else:
             manager.cache_all_categories(args.limit)
-        time.sleep(2)
+        
+        print("\n=== 步骤 2/3: 处理原始缓存数据 ===")
+        time.sleep(1)
+        manager.reprocess_cached_data()
+        
+        print("\n=== 步骤 3/3: 向量化处理后的数据 ===")
+        time.sleep(1)
         manager.vectorize_cached_data()
+        
+        print("\n✅ 完整流程执行完毕！")
+    
+    elif args.action == "process":
+        # 处理原始缓存数据（预处理并保存到 processed 文件夹）
+        manager.reprocess_cached_data()
+    
+    elif args.action == "reprocess":
+        # 重新预处理现有缓存数据
+        manager.reprocess_cached_data()
     
     elif args.action == "stats":
         # 显示缓存统计
