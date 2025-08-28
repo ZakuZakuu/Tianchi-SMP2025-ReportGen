@@ -118,34 +118,44 @@ class RAGSystem:
             except Exception as e:
                 logger.error(f"初始化collection失败 {category_name}: {e}")
     
-    def add_documents(self, category: str, documents: List[str], metadatas: Optional[List[Dict]] = None):
-        """添加文档到指定类别的知识库"""
+    def add_documents(self, category: str, documents: List[str]) -> bool:
+        """向指定类别添加文档"""
+        return self.add_documents_with_metadata(category, [{'text': doc, 'metadata': {}} for doc in documents])
+    
+    def add_documents_with_metadata(self, category: str, doc_data: List[Dict]) -> bool:
+        """向指定类别添加带元数据的文档"""
         if category not in self.collections:
             logger.error(f"未知类别: {category}")
             return False
         
+        if not doc_data:
+            logger.warning("没有文档需要添加")
+            return True
+        
         try:
             collection = self.collections[category]
             
-            # 准备metadata
-            if metadatas is None:
-                metadatas = [{"source": "knowledge_base", "category": category}] * len(documents)
+            # 提取文档和元数据
+            documents = [item['text'] for item in doc_data]
+            metadatas = []
             
-            # 过滤过长文档（使用配置的最大文档长度）
-            # 与external_data_config.py的分块大小保持一致
-            max_doc_length = config.MAX_DOCUMENT_LENGTH
+            for item in doc_data:
+                metadata = item.get('metadata', {}).copy()
+                # 确保category信息在元数据中
+                metadata['category'] = category
+                metadatas.append(metadata)
+            
+            # 过滤空文档
             filtered_docs = []
             filtered_metas = []
-            for i, doc in enumerate(documents):
-                if len(doc) <= max_doc_length:
-                    filtered_docs.append(doc)
-                    filtered_metas.append(metadatas[i] if i < len(metadatas) else metadatas[0])
-                else:
-                    # 智能截断：优先保留开头和结尾的重要信息
-                    truncated = self._smart_truncate(doc, max_doc_length)
-                    filtered_docs.append(truncated)
-                    filtered_metas.append(metadatas[i] if i < len(metadatas) else metadatas[0])
-                    logger.warning(f"文档过长已智能截断: {len(doc)} -> {len(truncated)}字符")
+            for doc, meta in zip(documents, metadatas):
+                if doc and doc.strip():
+                    filtered_docs.append(doc.strip())
+                    filtered_metas.append(meta)
+            
+            if not filtered_docs:
+                logger.warning("所有文档都为空，跳过添加")
+                return True
             
             # 分批处理，每批最多16个文档（留出安全边界）
             batch_size = 16
@@ -197,9 +207,15 @@ class RAGSystem:
             retrieved_docs = []
             if results['documents'] and results['documents'][0]:
                 for i, doc in enumerate(results['documents'][0]):
+                    metadata = results['metadatas'][0][i] if results['metadatas'] and results['metadatas'][0] else {}
                     retrieved_docs.append({
                         'text': doc,
-                        'metadata': results['metadatas'][0][i] if results['metadatas'] else {},
+                        'category': metadata.get('category', 'Unknown'),
+                        'source': metadata.get('source', 'Unknown'),
+                        'title': metadata.get('title', ''),
+                        'date': metadata.get('date', ''),
+                        'type': metadata.get('type', ''),
+                        'metadata': metadata,
                         'distance': results['distances'][0][i] if results['distances'] else 0.0
                     })
             

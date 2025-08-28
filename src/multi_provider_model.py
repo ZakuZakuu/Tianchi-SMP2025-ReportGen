@@ -508,7 +508,7 @@ class MultiProviderModelManager:
                     
                     logger.info(f"Token使用: 输入{token_info['input_tokens']}, 输出{token_info['output_tokens']}")
                     
-                    if result and len(result.strip()) > 50:
+                    if result and len(result.strip()) > 0:
                         logger.info(f"生成成功，使用模型: {model_info['provider']}:{model_info['model_name']}")
                         return result
                     else:
